@@ -1000,28 +1000,47 @@ export default function App() {
                 : "折りたたむ"}
             </button>
 
-            <button
+             <button
               onClick={() => {
-                if (!selectedNodeId) return;
+               if (!selectedNodeId) return;
+
+                const idsToDelete = [selectedNodeId];
+
+                let changed = true;
+
+               while (changed) {
+                  changed = false;
+
+                 edges.forEach((edge) => {
+                   if (
+                     idsToDelete.includes(edge.source) &&
+                     !idsToDelete.includes(edge.target)
+                   ) {
+                     idsToDelete.push(edge.target);
+                     changed = true;
+                   }
+                  });
+               }
 
                setNodes(
                  nodes.filter(
-                    (node) => node.id !== selectedNodeId
+                    (node) =>
+                     !idsToDelete.includes(node.id)
                  )
                );
 
                setEdges(
                  edges.filter(
                    (edge) =>
-                      edge.source !== selectedNodeId &&
-                      edge.target !== selectedNodeId
+                     !idsToDelete.includes(edge.source) &&
+                     !idsToDelete.includes(edge.target)
                  )
-                );
+               );
 
-                setSelectedNodeId(null);
+               setSelectedNodeId(null);
              }}
             >
-              削除
+             削除
             </button>
 
             <div
