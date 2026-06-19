@@ -768,20 +768,40 @@ export default function App() {
   }
 
   if (mode === "mindmap") {
+
+    const childCount = (nodeId) => {
+      return edges.filter(
+        (edge) => edge.source === nodeId
+      ).length;
+    };
+
     const coloredNodes = nodes.map(
-      (node) => ({
-        ...node,
-        style: {
-          border: `${node.id === selectedNodeId
-              ? "4px dashed"
-              : "4px solid"
-            } ${node.data.color || "#000000"
-            }`,
-          borderRadius: "12px",
-          background: "#ffffff",
-        },
-      })
-    );
+  (node) => ({
+    ...node,
+
+    data: {
+      ...node.data,
+      label:
+        childCount(node.id) > 0
+          ? `${
+              node.data.collapsed
+                ? "▶"
+                : "▼"
+            } ${node.data.label} (${childCount(node.id)})`
+          : node.data.label,
+    },
+
+    style: {
+      border: `${node.id === selectedNodeId
+          ? "4px dashed"
+          : "4px solid"
+        } ${node.data.color || "#000000"
+        }`,
+      borderRadius: "12px",
+      background: "#ffffff",
+    },
+  })
+);
 
     const visibleNodes = coloredNodes.filter(
   (node) => {
@@ -950,6 +970,30 @@ export default function App() {
               {selectedNode?.data.collapsed
                 ? "展開"
                 : "折りたたむ"}
+            </button>
+
+            <button
+              onClick={() => {
+                if (!selectedNodeId) return;
+
+               setNodes(
+                 nodes.filter(
+                    (node) => node.id !== selectedNodeId
+                 )
+               );
+
+               setEdges(
+                 edges.filter(
+                   (edge) =>
+                      edge.source !== selectedNodeId &&
+                      edge.target !== selectedNodeId
+                 )
+                );
+
+                setSelectedNodeId(null);
+             }}
+            >
+              削除
             </button>
 
             <div
