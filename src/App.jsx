@@ -115,6 +115,22 @@ export default function App() {
 
   const [edges, setEdges] =
     useState(initialEdges);
+  
+  useEffect(() => {
+  const savedNodes =
+    localStorage.getItem("mindmap_nodes");
+
+  const savedEdges =
+    localStorage.getItem("mindmap_edges");
+
+  if (savedNodes) {
+    setNodes(JSON.parse(savedNodes));
+  }
+
+  if (savedEdges) {
+    setEdges(JSON.parse(savedEdges));
+  }
+}, []);
 
   const [newNodeLabel, setNewNodeLabel] =
     useState("");
@@ -173,6 +189,18 @@ export default function App() {
       JSON.stringify(products)
     );
   }, [products]);
+
+  useEffect(() => {
+  localStorage.setItem(
+    "mindmap_nodes",
+    JSON.stringify(nodes)
+  );
+
+  localStorage.setItem(
+    "mindmap_edges",
+    JSON.stringify(edges)
+  );
+}, [nodes, edges]);
 
   const genderOptions = [
     "男性",
