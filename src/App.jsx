@@ -509,6 +509,9 @@ export default function App() {
             }
           </small>
 
+
+         <div>ボタン側: {newProduct}</div>
+    
           <button
   
   
@@ -528,7 +531,7 @@ export default function App() {
         sourcePosition: "right",
         targetPosition: "left",
         data: {
-          label: newProduct,
+          label: selectedProduct,
           memo: "",
           color: "#ffffff",
           collapsed: false,
