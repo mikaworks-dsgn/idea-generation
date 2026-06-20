@@ -1,23 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
-const initialNodes = [
-  {
-    id: "1",
-    position: {
-      x: 250,
-      y: 100,
-    },
-    sourcePosition: "right",
-    targetPosition: "left",
-    data: {
-      label: "クーリッシュ",
-      memo: "",
-      color: "#ffffff",
-      collapsed: false,
-    },
-  },
-];
+const initialNodes = [];
 
 const initialEdges = [];
 
@@ -312,6 +296,8 @@ export default function App() {
           }
         />
 
+        <div>入力値: {newProduct}</div>
+
         <button
           onClick={() => {
             if (!newProduct.trim()) return;
@@ -523,9 +509,42 @@ export default function App() {
             }
           </small>
 
-          <button onClick={() => setMode("mindmap")}>
-            マインドマップ
-          </button>
+          <button
+  
+  
+  onClick={() => {
+
+   console.log("newProduct=", newProduct);
+
+    const rootId = Date.now().toString();
+
+    setNodes([
+      {
+        id: rootId,
+        position: {
+          x: 250,
+          y: 100,
+        },
+        sourcePosition: "right",
+        targetPosition: "left",
+        data: {
+          label: newProduct,
+          memo: "",
+          color: "#ffffff",
+          collapsed: false,
+        },
+      },
+    ]);
+
+    setEdges([]);
+
+    setSelectedNodeId(rootId);
+
+    setMode("mindmap");
+  }}
+>
+  マインドマップ
+</button>
 
           <button onClick={() => setMode("integration")}>
             <div>統合思考</div>
