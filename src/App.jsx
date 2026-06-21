@@ -1334,12 +1334,12 @@ export default function App() {
   if (mode === "aidma") {
 
     const aidmaRows = [
-  ["A", "認知", "知らない", "認知度向上"],
-  ["A", "認知", "認知しているが想起できない", "さらに知名度アップ"],
-  ["I", "興味", "興味がない", "商品に対する評価育成"],
-  ["D", "欲求", "欲しいとは思っていない", "ニーズ喚起"],
-  ["M", "動機", "欲しいと思っても買おうと思わない", "購入意図形成"],
-  ["A", "行動", "買おうか買うまいか迷っている", "購入意図喚起"],
+  ["A", "認知", "知らない", "認知度向上", "「こんな商品があるんだ！」"],
+  ["A", "認知", "認知しているが想起できない", "さらに知名度アップ" , "「こんな商品があるんだ！」"],
+  ["I", "興味", "興味がない", "商品に対する評価育成", "「面白そう！なんか使えそう！」"],
+  ["D", "欲求", "欲しいとは思っていない", "ニーズ喚起", "「欲しい！」"],
+  ["M", "動機", "欲しいと思っても買おうと思わない", "購入意図形成", "「買いたい！」"],
+  ["A", "行動", "買おうか買うまいか迷っている", "購入意図喚起", "「買おう！」"],
 ];
 
   return (
@@ -1372,45 +1372,76 @@ export default function App() {
             <th>顧客の態度</th>
             <th>顧客の意欲の把握</th>
             <th>プロモーション目標</th>
-            <th>自由入力</th>
+            <th>現状</th>
+            <th>改善点</th>
           </tr>
         </thead>
 
         <tbody>
   {aidmaRows.map(
     (
-      [stage, attitude, insight, goal],
+      [stage, attitude, insight, goal, problems],
       index
     ) => (
       <tr key={index}>
         <td>{stage}</td>
         <td>{attitude}</td>
         <td>{insight}</td>
-        <td>{goal}</td>
+        <td>{goal}
+          <br />
+          {problems}
+        </td>
 
         <td>
-          <textarea
-            value={
-              aidmaData[selectedProduct]?.[
-                index
-              ] || ""
-            }
-            onChange={(e) => {
-              setAidmaData({
-                ...aidmaData,
+  <textarea
+    value={
+      aidmaData[selectedProduct]?.[
+        index
+      ]?.current || ""
+    }
+    placeholder="現状"
+    onChange={(e) => {
+      setAidmaData({
+        ...aidmaData,
+        [selectedProduct]: {
+          ...aidmaData[selectedProduct],
+          [index]: {
+            ...aidmaData[selectedProduct]?.[
+              index
+            ],
+            current: e.target.value,
+          },
+        },
+      });
+    }}
+  />
+</td>
 
-                [selectedProduct]: {
-                  ...aidmaData[
-                    selectedProduct
-                  ],
-
-                  [index]:
-                    e.target.value,
-                },
-              });
-            }}
-          />
-        </td>
+<td>
+  <textarea
+    value={
+      aidmaData[selectedProduct]?.[
+        index
+      ]?.improvement || ""
+    }
+    placeholder="改善点"
+    onChange={(e) => {
+      setAidmaData({
+        ...aidmaData,
+        [selectedProduct]: {
+          ...aidmaData[selectedProduct],
+          [index]: {
+            ...aidmaData[selectedProduct]?.[
+              index
+            ],
+            improvement:
+              e.target.value,
+          },
+        },
+      });
+    }}
+  />
+</td>
       </tr>
     )
   )}
