@@ -186,6 +186,26 @@ export default function App() {
   );
 }, [nodes, edges]);
 
+  const [aidmaData, setAidmaData] = useState({});
+
+  useEffect(() => {
+  const savedAidma =
+    localStorage.getItem("aidmaData");
+
+  if (savedAidma) {
+    setAidmaData(JSON.parse(savedAidma));
+  }
+}, []);
+
+  useEffect(() => {
+  localStorage.setItem(
+    "aidmaData",
+    JSON.stringify(aidmaData)
+  );
+}, [aidmaData]);
+
+  
+
   const genderOptions = [
     "男性",
     "女性",
@@ -295,8 +315,6 @@ export default function App() {
             setNewProduct(e.target.value)
           }
         />
-
-        <div>入力値: {newProduct}</div>
 
         <button
           onClick={() => {
@@ -439,7 +457,7 @@ export default function App() {
             <div>詳しく考える</div>
 
             <small>
-              ブランド：
+              メーカー・ブランドの雰囲気：
               {brandMood || "未入力"}
             </small>
 
@@ -508,9 +526,6 @@ export default function App() {
               || "未入力"
             }
           </small>
-
-
-         <div>ボタン側: {newProduct}</div>
     
           <button
   
@@ -550,7 +565,7 @@ export default function App() {
 </button>
 
           <button onClick={() => setMode("integration")}>
-            <div>統合思考</div>
+            <div>まとめる</div>
 
             <small>
               質感：
@@ -593,11 +608,11 @@ export default function App() {
           </small>
 
           <button onClick={() => setMode("conversion")}>
-            転換思考
+            見方を変える
           </button>
 
-          <button onClick={() => setMode("innovation")}>
-            破壊的イノベーション
+          <button onClick={() => setMode("aidma")}>
+            AIDMAモデル
           </button>
 
           <button onClick={() => setMode("competitor")}>
@@ -1154,7 +1169,7 @@ export default function App() {
         if (mode === "integration") {
   return (
         <div className="container">
-          <h1>統合思考</h1>
+          <h1>まとめる</h1>
 
           <button
             onClick={() => setMode(null)}
@@ -1316,6 +1331,95 @@ export default function App() {
         );
 }
 
+  if (mode === "aidma") {
+
+    const aidmaRows = [
+  ["A", "認知", "知らない", "認知度向上"],
+  ["A", "認知", "認知しているが想起できない", "さらに知名度アップ"],
+  ["I", "興味", "興味がない", "商品に対する評価育成"],
+  ["D", "欲求", "欲しいとは思っていない", "ニーズ喚起"],
+  ["M", "動機", "欲しいと思っても買おうと思わない", "購入意図形成"],
+  ["A", "行動", "買おうか買うまいか迷っている", "購入意図喚起"],
+];
+
+  return (
+    <div
+      style={{
+        padding: "20px",
+      }}
+    >
+      <button
+        onClick={() => setMode(null)}
+      >
+        ← 戻る
+      </button>
+
+      <h2>
+        {selectedProduct}
+        のAIDMA分析
+      </h2>
+
+      <table
+        border="1"
+        style={{
+          borderCollapse: "collapse",
+          width: "100%",
+        }}
+      >
+        <thead>
+          <tr>
+            <th>AIDMA</th>
+            <th>顧客の態度</th>
+            <th>顧客の意欲の把握</th>
+            <th>プロモーション目標</th>
+            <th>自由入力</th>
+          </tr>
+        </thead>
+
+        <tbody>
+  {aidmaRows.map(
+    (
+      [stage, attitude, insight, goal],
+      index
+    ) => (
+      <tr key={index}>
+        <td>{stage}</td>
+        <td>{attitude}</td>
+        <td>{insight}</td>
+        <td>{goal}</td>
+
+        <td>
+          <textarea
+            value={
+              aidmaData[selectedProduct]?.[
+                index
+              ] || ""
+            }
+            onChange={(e) => {
+              setAidmaData({
+                ...aidmaData,
+
+                [selectedProduct]: {
+                  ...aidmaData[
+                    selectedProduct
+                  ],
+
+                  [index]:
+                    e.target.value,
+                },
+              });
+            }}
+          />
+        </td>
+      </tr>
+    )
+  )}
+</tbody>
+      </table>
+    </div>
+  );
+}
+
 
 
 
@@ -1372,7 +1476,7 @@ export default function App() {
             ← ホームへ戻る
           </button>
 
-          <h1>Design Thinking Wizard</h1>
+          <h1>デザインを考える</h1>
 
           <div className="step">
             Step {currentStep + 1} / {steps.length}
