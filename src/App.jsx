@@ -169,6 +169,18 @@ export default function App() {
   const [editingProduct, setEditingProduct] = useState(null);
   const [editName, setEditName] = useState("");
 
+  const [c4cData, setC4cData] = useState({
+  value: [],
+  cost: [],
+  convenience: [],
+  communication: []
+});
+
+  const [valueList, setValueList] = useState([""]);
+  const [costList, setCostList] = useState([""]);
+  const [convenienceList, setConvenienceList] = useState([""]);
+  const [communicationList, setCommunicationList] = useState([""]);
+
 
   useEffect(() => {
     localStorage.setItem(
@@ -640,8 +652,8 @@ export default function App() {
             AIDMAモデル
           </button>
 
-          <button onClick={() => setMode("competitor")}>
-            競合商品
+          <button onClick={() => setMode("c4c")}>
+            顧客の4C分析
           </button>
 
 
@@ -1383,6 +1395,16 @@ export default function App() {
         );
   }
 
+//SWOTの入力データを更新するための共通関数
+  const updateSwot = (key, valueKey, value) => {
+  setSwotData({
+    ...swotData,
+    [selectedProduct]: {
+      ...swotData[selectedProduct],
+      [valueKey]: value,
+    },
+  });
+};
 //modeがswotのときはSWOT分析の画面を表示する
   if (mode === "swot") {
   return (
@@ -1450,14 +1472,14 @@ export default function App() {
          <textarea
     value={
       swotData[selectedProduct]
-        ?.strength || ""
+        ?.weaknesses || ""
     }
     onChange={(e) =>
       setSwotData({
         ...swotData,
         [selectedProduct]: {
           ...swotData[selectedProduct],
-          strength: e.target.value,
+          weaknesses: e.target.value,
         },
       })
     }
@@ -1476,34 +1498,34 @@ export default function App() {
          <textarea
     value={
       swotData[selectedProduct]
-        ?.strength || ""
+        ?.opportunities || ""
     }
     onChange={(e) =>
       setSwotData({
         ...swotData,
         [selectedProduct]: {
           ...swotData[selectedProduct],
-          strength: e.target.value,
+          opportunities: e.target.value,
         },
       })
     }
   />
       </td>
 
-      <td className="swot-box">
-        <div>Threats（脅威）</div>
+      <td className="swot-box"> {/*表の1ますを作る*/}
+        <div>Threats（脅威）</div> {/*Threatsという箱を作る*/ }
 
          <textarea
     value={
       swotData[selectedProduct]
-        ?.strength || ""
+        ?.threats || ""
     }
     onChange={(e) =>
       setSwotData({
         ...swotData,
         [selectedProduct]: {
           ...swotData[selectedProduct],
-          strength: e.target.value,
+          threats: e.target.value,
         },
       })
     }
@@ -1642,6 +1664,221 @@ export default function App() {
 }
 
 
+
+
+if (mode === "c4c") {
+  return (
+    <div>
+
+      <button
+  onClick={() => setMode(null)}
+>
+  ← 戻る
+</button>
+
+      <h2>{selectedProduct}の4C分析</h2>
+
+      <table border="1">
+        <tbody>
+
+          <tr>
+            <td>
+              <div>顧客にとっての価値</div>
+              Customer Value
+            </td>
+            <td>
+              <div>
+            {valueList.map((item, index) => (
+             <div key={index} style={{ display: "flex", gap: "10px" }}>
+      
+                <input
+                 value={item}
+                 onChange={(e) => {
+                    const newList = [...valueList];
+                    newList[index] = e.target.value;
+                   setValueList(newList);
+                 }}
+             />
+
+      <button
+        onClick={() => {
+
+          if (valueList.length === 1)
+            return;
+
+          const newList =
+            valueList.filter((_, i) => i !== index);
+
+          setValueList(newList);
+        }}
+      >
+        ×
+      </button>
+
+    </div>
+  ))}
+</div>
+
+      <button
+        onClick={() => {
+          setValueList([...valueList, ""]);
+       }}
+      >
+       ＋追加
+      </button>
+
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <div>顧客の負担</div>
+              Cost to the Customer
+            </td>
+            <td>
+               <div>
+            {costList.map((item, index) => (
+             <div key={index} style={{ display: "flex", gap: "10px" }}>
+      
+                <input
+                 value={item}
+                 onChange={(e) => {
+                    const newList = [...costList];
+                    newList[index] = e.target.value;
+                   setCostList(newList);
+                 }}
+             />
+
+      <button
+        onClick={() => {
+
+          if (costList.length === 1)
+            return;
+
+          const newList =
+            costList.filter((_, i) => i !== index);
+
+          setCostList(newList);
+        }}
+      >
+        ×
+      </button>
+
+    </div>
+  ))}
+</div>
+
+      <button
+        onClick={() => {
+          setCostList([...costList, ""]);
+       }}
+      >
+       ＋追加
+      </button>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <div>入手の容易性</div>
+              Convenience
+            </td>
+            <td>
+               <div>
+            {convenienceList.map((item, index) => (
+             <div key={index} style={{ display: "flex", gap: "10px" }}>
+      
+                <input
+                 value={item}
+                 onChange={(e) => {
+                    const newList = [...convenienceList];
+                    newList[index] = e.target.value;
+                   setConvenienceList(newList);
+                 }}
+             />
+
+      <button
+        onClick={() => {
+
+          if (convenienceList.length === 1)
+            return;
+
+          const newList =
+            convenienceList.filter((_, i) => i !== index);
+
+          setConvenienceList(newList);
+        }}
+      >
+        ×
+      </button>
+
+    </div>
+  ))}
+</div>
+
+      <button
+        onClick={() => {
+          setConvenienceList([...convenienceList, ""]);
+       }}
+      >
+       ＋追加
+      </button>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <div>コミュニケーション</div>
+              Communication
+              </td>
+            <td>
+               <div>
+            {communicationList.map((item, index) => (
+             <div key={index} style={{ display: "flex", gap: "10px" }}>
+      
+                <input
+                 value={item}
+                 onChange={(e) => {
+                    const newList = [...communicationList];
+                    newList[index] = e.target.value;
+                   setCommunicationList(newList);
+                 }}
+             />
+
+      <button
+        onClick={() => {
+
+          if (communicationList.length === 1)
+            return;
+
+          const newList =
+            communicationList.filter((_, i) => i !== index);
+
+          setCommunicationList(newList);
+        }}
+      >
+        ×
+      </button>
+
+    </div>
+  ))}
+</div>
+
+      <button
+        onClick={() => {
+          setCommunicationList([...communicationList, ""]);
+       }}
+      >
+       ＋追加
+      </button>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 
         if (currentStep === steps.length) {
