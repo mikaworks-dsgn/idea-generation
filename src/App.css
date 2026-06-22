@@ -189,7 +189,7 @@
 }
 
 .menu-grid button {
-  height: 150px;
+  min-height: 250px;
   font-size: 24px;
 }
 
@@ -229,4 +229,16 @@ textarea {
   border: 1px solid #ccc;
 
   font-size: 16px;
+}
+
+.swot-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.swot-box {
+  border: 1px solid #ccc;
+  min-height: 250px;
+  padding: 20px;
 }

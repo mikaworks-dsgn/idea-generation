@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
-const initialNodes = [];
+const initialNodes = []; //マインドマップのノードのリストを作る
 
-const initialEdges = [];
+const initialEdges = []; //マインドマップのエッジのリストを作る
 
 import {
   ReactFlow,
@@ -49,34 +49,34 @@ const steps = [
 export default function App() {
   const [currentStep, setCurrentStep] = useState(0);
 
-  const [mode, setMode] = useState(null);
+  const [mode, setMode] = useState(null); //見ている画面を入れる場所を作る
 
-  const [manufacturer, setManufacturer] = useState("");
+  const [manufacturer, setManufacturer] = useState(""); //メーカー名を入れる箱を作る
 
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(""); //カテゴリーを入れる箱を作る
 
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState(""); //価格を入れる箱を作る
 
-  const [salesPlaces, setSalesPlaces] = useState([]);
+  const [salesPlaces, setSalesPlaces] = useState([]); //販売場所のリストを作る
 
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null); 
 
-  const [selectedTextures, setSelectedTextures] = useState([]);
+  const [selectedTextures, setSelectedTextures] = useState([]); //質感のリストを作る
 
   const [brandMood, setBrandMood] =
-    useState("");
+    useState(""); //メーカー・ブランドの雰囲気を入れる箱を作る
 
   const [usageScene, setUsageScene] =
-    useState("");
+    useState(""); //使用場面を入れる箱を作る
 
   const [purchaseScene, setPurchaseScene] =
-    useState("");
+    useState(""); //購入場面を入れる箱を作る
 
   const [productImage, setProductImage] =
-    useState("");
+    useState(""); //商品のイメージを入れる箱を作る
 
   const [weakPoint, setWeakPoint] =
-    useState("");
+    useState(""); //弱みを入れる箱を作る
 
   const [strengths, setStrengths] =
     useState([
@@ -87,10 +87,13 @@ export default function App() {
     ]);
 
   const [mindMapNodes, setMindMapNodes] =
-    useState([]);
+    useState([]); //を入れる箱を作る
 
   const [newNode, setNewNode] =
     useState("");
+  
+  const [swotData, setSwotData] =
+  useState({});
 
 
 
@@ -447,6 +450,40 @@ export default function App() {
                 ? salesPlaces.join("、")
                 : "未入力"}
             </small>
+
+            <br />
+
+            
+
+            <small>
+            一般的なイメージ：
+            {productImage || "未入力"}
+          </small>
+
+            <br />
+
+            <small>
+              いい：
+              {category || "未入力"}
+            </small>
+
+            <br />
+            
+            
+            <small>
+              使用場面：
+              {usageScene || "未入力"} {/*商品ごとのホーム画面への表示*/}
+            </small>
+
+            <br />
+
+            <small>
+              購入場面い：
+              {purchaseScene || "未入力"}{/*商品ごとのホーム画面への表示*/}
+            </small>
+
+            <br />
+
           </button>
 
           <button onClick={() => setMode("simple")}>
@@ -454,46 +491,24 @@ export default function App() {
           </button>
 
           <button onClick={() => setMode("detail")}>
-            <div>詳しく考える</div>
+            <div>競合商品</div>{/*2の題名*/}
 
             <small>
-              メーカー・ブランドの雰囲気：
-              {brandMood || "未入力"}
+              あああああ（2）：
+              {brandMood || "未入力"}{/*商品ごとのホーム画面への表示*/}
             </small>
 
             <br />
-
-            <small>
-              使用場面：
-              {usageScene || "未入力"}
-            </small>
-
-            <br />
-
-            <small>
-              購入場面：
-              {purchaseScene || "未入力"}
-            </small>
-          </button>
-
-          <br />
 
           <small>
-            一般的なイメージ：
-            {productImage || "未入力"}
+            ううううう（2）：
+            {weakPoint || "未入力"}{/*商品ごとのホーム画面への表示*/}
           </small>
 
           <br />
 
           <small>
-            微妙なところ：
-            {weakPoint || "未入力"}
-          </small>
-
-          <br />
-
-          <small>
-            よいところ：
+            よいところ：{/*商品ごとのホーム画面への表示*/}
           </small>
 
           {
@@ -513,7 +528,7 @@ export default function App() {
           <br />
 
           <small>
-            競合商品：
+            競合商品：{/*商品ごとのホーム画面への表示*/}
             {
               strengths
                 .filter(
@@ -526,6 +541,13 @@ export default function App() {
               || "未入力"
             }
           </small>
+
+
+          </button>
+
+          
+
+         
     
           <button
   
@@ -591,9 +613,8 @@ export default function App() {
                 ? selectedShapes.join("、")
                 : "未選択"}
             </small>
-          </button>
 
-          <br />
+            <br />
 
           <small>
             問題点：
@@ -607,8 +628,12 @@ export default function App() {
             {improvements || "未入力"}
           </small>
 
-          <button onClick={() => setMode("conversion")}>
-            見方を変える
+          </button>
+
+          
+
+          <button onClick={() => setMode("swot")}>
+            SWOT分析
           </button>
 
           <button onClick={() => setMode("aidma")}>
@@ -664,6 +689,8 @@ export default function App() {
           placeholder="例：アイス"
         />
 
+        
+
         <h2>価格</h2>
 
         <input
@@ -708,49 +735,6 @@ export default function App() {
             {place}
           </label>
         ))}
-      </div>
-    );
-  }
-
-  if (mode === "detail") {
-    return (
-      <div className="container">
-        <h1>詳しく考える</h1>
-
-        <button
-          onClick={() => setMode(null)}
-        >
-          ← 戻る
-        </button>
-
-        <h2>
-          メーカー・ブランドの雰囲気
-        </h2>
-
-        <textarea
-          value={brandMood}
-          onChange={(e) =>
-            setBrandMood(e.target.value)
-          }
-        />
-
-        <h2>使用場面</h2>
-
-        <textarea
-          value={usageScene}
-          onChange={(e) =>
-            setUsageScene(e.target.value)
-          }
-        />
-
-        <h2>買う場面</h2>
-
-        <textarea
-          value={purchaseScene}
-          onChange={(e) =>
-            setPurchaseScene(e.target.value)
-          }
-        />
 
         <h2>
           商品の一般的なイメージ
@@ -765,6 +749,70 @@ export default function App() {
           }
         />
 
+        <h2>使用場</h2>
+        
+        {/*入力欄を作る*/}
+        <textarea
+          value={usageScene} 
+          onChange={(e) =>
+            setUsageScene(e.target.value)
+          }
+        />
+        <h2>買う場面</h2>
+        
+        {/*入力欄を作る*/}
+        <textarea
+          value={purchaseScene}
+          onChange={(e) =>
+            setPurchaseScene(e.target.value)
+          }
+        />
+
+      </div>
+    );
+  }
+
+        
+
+  if (mode === "detail") {
+    return (
+      <div className="container">
+        <h1>競合商品</h1>{/*3の題名*/}
+
+        <button
+          onClick={() => setMode(null)}
+        >
+          ← 戻る
+        </button>
+
+        {/*入力欄を作る*/}
+        <h2>
+          あああああ（3）
+        </h2>
+
+        <textarea
+          value={brandMood}
+          onChange={(e) =>
+            setBrandMood(e.target.value)
+          }
+        />
+
+        {/*入力欄を作る*/}
+        <h2>
+          いいいいい（3）
+        </h2>
+
+        <textarea
+          value={productImage}
+          onChange={(e) =>
+            setProductImage(
+              e.target.value
+            )
+          }
+        />
+
+        
+        {/*入力欄を作る*/}
         <h2>よいところ</h2>
 
         {strengths.map((item, index) => (
@@ -804,6 +852,7 @@ export default function App() {
               }}
             />
 
+            {/*入力欄を作る*/}
             <input
               type="text"
               placeholder="競合商品"
@@ -820,7 +869,8 @@ export default function App() {
           </div>
         ))}
 
-        <h2>微妙なところ</h2>
+        {/*入力欄を作る*/}
+        <h2>ううううう（3）</h2>
 
         <textarea
           value={weakPoint}
@@ -832,6 +882,7 @@ export default function App() {
     );
   }
 
+//modeがmindmap のときはマインドマップ画面を表示する
   if (mode === "mindmap") {
 
     const childCount = (nodeId) => {
@@ -1080,10 +1131,11 @@ export default function App() {
              削除
             </button>
 
+            {/*マインドマップのメモ欄の幅？*/}
             <div
               style={{
                 display: "flex",
-                gap: "8px",
+                gap: "10px",
                 marginTop: "8px",
               }}
             >
@@ -1166,8 +1218,8 @@ export default function App() {
         );
 }
 
-        if (mode === "integration") {
-  return (
+  if (mode === "integration") {
+    return (
         <div className="container">
           <h1>まとめる</h1>
 
@@ -1329,8 +1381,146 @@ export default function App() {
 
         </div>
         );
+  }
+
+//modeがswotのときはSWOT分析の画面を表示する
+  if (mode === "swot") {
+  return (
+    <div style={{ padding: "20px" }}>
+
+      <button
+        onClick={() => setMode(null)}
+      >
+        ← 戻る
+      </button>
+
+      <h2>
+        {selectedProduct}
+        のSWOT分析
+      </h2>
+
+ 
+  
+  <table
+  border="1"
+  style={{
+    borderCollapse: "collapse",
+    width: "100%",
+    textAlign: "center",
+  }}
+>
+
+  <tbody>
+
+    <tr>
+      <td></td>
+      <td>プラス要因</td>
+      <td>マイナス要因</td>
+    </tr>
+
+    <tr>
+      <td>
+        内部（現在）
+      </td>
+      <td className="swot-box">
+        <div>Strength（強み）</div>
+
+         <textarea
+    value={
+      swotData[selectedProduct]
+        ?.strength || ""
+    }
+    onChange={(e) =>
+      setSwotData({
+        ...swotData,
+        [selectedProduct]: {
+          ...swotData[selectedProduct],
+          strength: e.target.value,
+        },
+      })
+    }
+  />     
+  </td>
+        
+      
+
+      <td className="swot-box">
+        <div>Weaknesses（弱み）</div>
+
+         <textarea
+    value={
+      swotData[selectedProduct]
+        ?.strength || ""
+    }
+    onChange={(e) =>
+      setSwotData({
+        ...swotData,
+        [selectedProduct]: {
+          ...swotData[selectedProduct],
+          strength: e.target.value,
+        },
+      })
+    }
+  />
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        外部（3年先まで）
+      </td>
+
+      <td className="swot-box">
+        <div>Opportunities（機会）</div>
+
+         <textarea
+    value={
+      swotData[selectedProduct]
+        ?.strength || ""
+    }
+    onChange={(e) =>
+      setSwotData({
+        ...swotData,
+        [selectedProduct]: {
+          ...swotData[selectedProduct],
+          strength: e.target.value,
+        },
+      })
+    }
+  />
+      </td>
+
+      <td className="swot-box">
+        <div>Threats（脅威）</div>
+
+         <textarea
+    value={
+      swotData[selectedProduct]
+        ?.strength || ""
+    }
+    onChange={(e) =>
+      setSwotData({
+        ...swotData,
+        [selectedProduct]: {
+          ...swotData[selectedProduct],
+          strength: e.target.value,
+        },
+      })
+    }
+  />
+      </td>
+    </tr>
+
+  </tbody>
+
+</table>
+  
+  
+</div>
+  );
 }
 
+//modeがaidmaのときはAIDMA分析画面を表示する
   if (mode === "aidma") {
 
     const aidmaRows = [
@@ -1340,7 +1530,7 @@ export default function App() {
   ["D", "欲求", "欲しいとは思っていない", "ニーズ喚起", "「欲しい！」"],
   ["M", "動機", "欲しいと思っても買おうと思わない", "購入意図形成", "「買いたい！」"],
   ["A", "行動", "買おうか買うまいか迷っている", "購入意図喚起", "「買おう！」"],
-];
+  ];
 
   return (
     <div
