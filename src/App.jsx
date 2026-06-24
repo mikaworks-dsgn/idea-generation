@@ -457,6 +457,13 @@ export default function App() {
             <br />
 
             <small>
+              価格：
+              {price || "未入力"}
+            </small>
+
+            <br />
+
+            <small>
               販売場所：
               {salesPlaces.length > 0
                 ? salesPlaces.join("、")
@@ -475,7 +482,7 @@ export default function App() {
             <br />
 
             <small>
-              いい：
+              aa：
               {category || "未入力"}
             </small>
 
@@ -490,7 +497,7 @@ export default function App() {
             <br />
 
             <small>
-              購入場面い：
+              購入場面：
               {purchaseScene || "未入力"}{/*商品ごとのホーム画面への表示*/}
             </small>
 
@@ -520,7 +527,7 @@ export default function App() {
           <br />
 
           <small>
-            よいところ：{/*商品ごとのホーム画面への表示*/}
+            よいところとそのよいところにおける競合商品：{/*商品ごとのホーム画面への表示*/}
           </small>
 
           {
@@ -761,7 +768,7 @@ export default function App() {
           }
         />
 
-        <h2>使用場</h2>
+        <h2>使用場面</h2>
         
         {/*入力欄を作る*/}
         <textarea
@@ -825,7 +832,7 @@ export default function App() {
 
         
         {/*入力欄を作る*/}
-        <h2>よいところ</h2>
+        <h2>よいところとそのよいところにおける競合商品</h2>
 
         {strengths.map((item, index) => (
           <div
