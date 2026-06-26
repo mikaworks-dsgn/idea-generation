@@ -103,21 +103,7 @@ export default function App() {
   const [edges, setEdges] =
     useState(initialEdges);
   
-  useEffect(() => {
-  const savedNodes =
-    localStorage.getItem("mindmap_nodes");
-
-  const savedEdges =
-    localStorage.getItem("mindmap_edges");
-
-  if (savedNodes) {
-    setNodes(JSON.parse(savedNodes));
-  }
-
-  if (savedEdges) {
-    setEdges(JSON.parse(savedEdges));
-  }
-}, []);
+  
 
   const [newNodeLabel, setNewNodeLabel] =
     useState("");
@@ -166,6 +152,25 @@ export default function App() {
   });
   const [newProduct, setNewProduct] = useState("");
 
+  const [mindMapData, setMindMapData] = useState({});
+
+  const saveMindMap = (
+  product,
+  newNodes,
+  newEdges
+) => {
+  setNodes(newNodes);
+  setEdges(newEdges);
+
+  setMindMapData((prev) => ({
+    ...prev,
+    [product]: {
+      nodes: newNodes,
+      edges: newEdges,
+    },
+  }));
+};
+
   const [editingProduct, setEditingProduct] = useState(null);
   const [editName, setEditName] = useState("");
 
@@ -189,17 +194,7 @@ export default function App() {
     );
   }, [products]);
 
-  useEffect(() => {
-  localStorage.setItem(
-    "mindmap_nodes",
-    JSON.stringify(nodes)
-  );
-
-  localStorage.setItem(
-    "mindmap_edges",
-    JSON.stringify(edges)
-  );
-}, [nodes, edges]);
+  
 
   const [aidmaData, setAidmaData] = useState({});
 
@@ -211,6 +206,22 @@ export default function App() {
     setAidmaData(JSON.parse(savedAidma));
   }
 }, []);
+
+  useEffect(() => {
+  const savedMindMap =
+    localStorage.getItem("mindMapData");
+
+  if (savedMindMap) {
+    setMindMapData(JSON.parse(savedMindMap));
+  }
+}, []);
+
+  useEffect(() => {
+  localStorage.setItem(
+    "mindMapData",
+    JSON.stringify(mindMapData)
+  );
+}, [mindMapData]);
 
   useEffect(() => {
   localStorage.setItem(
@@ -575,19 +586,25 @@ export default function App() {
 
    console.log("newProduct=", newProduct);
 
-    const rootId = Date.now().toString();
+const rootId = Date.now().toString();
 
+  if (mindMapData[product]) {
+    setNodes(mindMapData[product].nodes);
+    setEdges(mindMapData[product].edges);
+
+    setSelectedNodeId(
+      mindMapData[product].nodes[0].id
+    );
+
+  } else {
     setNodes([
       {
         id: rootId,
-        position: {
-          x: 250,
-          y: 100,
-        },
+        position: { x: 250, y: 100 },
         sourcePosition: "right",
         targetPosition: "left",
         data: {
-          label: selectedProduct,
+          label: product,
           memo: "",
           color: "#ffffff",
           collapsed: false,
@@ -595,12 +612,12 @@ export default function App() {
       },
     ]);
 
-    setEdges([]);
-
+    
     setSelectedNodeId(rootId);
+  }
 
-    setMode("mindmap");
-  }}
+  setMode("mindmap");
+}}
 >
   マインドマップ
 </button>
@@ -1036,35 +1053,40 @@ export default function App() {
                 (edge) => edge.source === selectedNodeId
               ).length;
 
-              setNodes([
-                ...nodes,
+              
 
 
-                {
-                  id: newId,
-                  position: {
-                    x: parentNode.position.x + 250,
-                    y: parentNode.position.y + childCount * 120,
-                  },
-                  sourcePosition: "right",
-                  targetPosition: "left",
-                  data: {
-                    label: newNodeLabel,
-                    memo: "",
-                    color: "#ffffff",
-                    collapsed: false,
-                  },
-                },
-              ]);
+              const newNodes = [
+  ...nodes,
+  {
+    id: newId,
+    position: {
+      x: parentNode.position.x + 250,
+      y: parentNode.position.y + childCount * 120,
+    },
+    sourcePosition: "right",
+    targetPosition: "left",
+    data: {
+      label: newNodeLabel,
+      memo: "",
+      color: "#ffffff",
+      collapsed: false,
+    },
+  },
+];
 
-              setEdges([
-                ...edges,
-                {
-                  id: `e-1-${newId}`,
-                  source: selectedNodeId,
-                  target: newId,
-                },
-              ]);
+const newEdges = [
+  ...edges,
+  {
+    id: `e-1-${newId}`,
+    source: selectedNodeId,
+    target: newId,
+  },
+];
+
+saveMindMap(newNodes, newEdges);
+
+
 
               setNewNodeLabel("");
             }}
@@ -1226,6 +1248,7 @@ export default function App() {
             nodes={visibleNodes}
             edges={edges}
             fitView
+            nodesDraggable={true}
             onNodeClick={(event, node) => {
               setSelectedNodeId(node.id);
             }}
