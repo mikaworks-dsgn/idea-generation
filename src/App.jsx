@@ -592,23 +592,18 @@ export default function App() {
     console.log("マインドマップボタン押された");
 
 
-    const savedNodes = localStorage.getItem("mindmap_nodes");
-    const savedEdges = localStorage.getItem("mindmap_edges");
-
-    console.log("savedNodes =", savedNodes);
-
-const parsedNodes = JSON.parse(savedNodes || "[]");
-const parsedEdges = JSON.parse(savedEdges || "[]");
-
-if (parsedNodes.length > 0) {
-  setNodes(parsedNodes);
-  setEdges(parsedEdges);
+    const savedMindMap = JSON.parse(
+  localStorage.getItem("mindMapData") || "{}"
+);
 
   
-} else if (mindMapData[selectedProduct]) {
-  setNodes(mindMapData[selectedProduct].nodes);
-  setEdges(mindMapData[selectedProduct].edges);
+
+
+  if (savedMindMap[selectedProduct]) {
+  setNodes(savedMindMap[selectedProduct].nodes);
+  setEdges(savedMindMap[selectedProduct].edges);
 } else {
+
   const rootId = Date.now().toString();
 
   setNodes([
@@ -629,6 +624,9 @@ if (parsedNodes.length > 0) {
   ]);
 
   setEdges([]);
+
+  setSelectedNodeId(rootId);
+  
 }
 
 setMode("mindmap");
