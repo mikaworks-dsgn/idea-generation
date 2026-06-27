@@ -159,6 +159,9 @@ export default function App() {
   newNodes,
   newEdges
 ) => {
+
+  console.log("保存した", product);
+
   setNodes(newNodes);
   setEdges(newEdges);
 
@@ -193,6 +196,11 @@ export default function App() {
       JSON.stringify(products)
     );
   }, [products]);
+
+  useEffect(() => {
+  localStorage.setItem("mindmap_nodes", JSON.stringify(nodes));
+  localStorage.setItem("mindmap_edges", JSON.stringify(edges));
+}, [nodes, edges]);
 
   
 
@@ -575,52 +583,61 @@ export default function App() {
 
           </button>
 
-          
 
-         
-    
+
+          
           <button
-  
-  
   onClick={() => {
 
-   console.log("newProduct=", newProduct);
+    console.log("マインドマップボタン押された");
 
-const rootId = Date.now().toString();
 
-  if (mindMapData[product]) {
-    setNodes(mindMapData[product].nodes);
-    setEdges(mindMapData[product].edges);
+    const savedNodes = localStorage.getItem("mindmap_nodes");
+    const savedEdges = localStorage.getItem("mindmap_edges");
 
-    setSelectedNodeId(
-      mindMapData[product].nodes[0].id
-    );
+    console.log("savedNodes =", savedNodes);
 
-  } else {
-    setNodes([
-      {
-        id: rootId,
-        position: { x: 250, y: 100 },
-        sourcePosition: "right",
-        targetPosition: "left",
-        data: {
-          label: product,
-          memo: "",
-          color: "#ffffff",
-          collapsed: false,
-        },
+const parsedNodes = JSON.parse(savedNodes || "[]");
+const parsedEdges = JSON.parse(savedEdges || "[]");
+
+if (parsedNodes.length > 0) {
+  setNodes(parsedNodes);
+  setEdges(parsedEdges);
+
+  
+} else if (mindMapData[selectedProduct]) {
+  setNodes(mindMapData[selectedProduct].nodes);
+  setEdges(mindMapData[selectedProduct].edges);
+} else {
+  const rootId = Date.now().toString();
+
+  setNodes([
+    {
+      id: rootId,
+      position: { x: 250, y: 100 },
+
+      sourcePosition: "right",
+      targetPosition: "left",
+
+      data: {
+        label: selectedProduct,
+        memo: "",
+        color: "#ffffff",
+        collapsed: false,
       },
-    ]);
+    },
+  ]);
 
-    
-    setSelectedNodeId(rootId);
-  }
+  setEdges([]);
+}
 
-  setMode("mindmap");
-}}
+setMode("mindmap");
+
+  }}
 >
   マインドマップ
 </button>
+
 
           <button onClick={() => setMode("integration")}>
             <div>まとめる</div>
@@ -1049,6 +1066,13 @@ const rootId = Date.now().toString();
                 (node) => node.id === selectedNodeId
               );
 
+              console.log("parentNode =", parentNode);
+
+              if (!parentNode) {
+  alert("親ノードが見つかりません");
+  return;
+}
+
               const childCount = edges.filter(
                 (edge) => edge.source === selectedNodeId
               ).length;
@@ -1084,8 +1108,7 @@ const newEdges = [
   },
 ];
 
-saveMindMap(newNodes, newEdges);
-
+saveMindMap(selectedProduct, newNodes, newEdges);
 
 
               setNewNodeLabel("");
