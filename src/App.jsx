@@ -9,6 +9,7 @@ import {
   ReactFlow,
   Background,
   Controls,
+  applyNodeChanges,
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
@@ -160,6 +161,8 @@ export default function App() {
   newEdges
 ) => {
 
+  
+
   console.log("保存した", product);
 
   setNodes(newNodes);
@@ -172,6 +175,10 @@ export default function App() {
       edges: newEdges,
     },
   }));
+};
+
+  const onNodesChange = (changes) => {
+  setNodes((nds) => applyNodeChanges(changes, nds));
 };
 
   const [editingProduct, setEditingProduct] = useState(null);
@@ -626,7 +633,7 @@ export default function App() {
   setEdges([]);
 
   setSelectedNodeId(rootId);
-  
+
 }
 
 setMode("mindmap");
@@ -1109,6 +1116,10 @@ const newEdges = [
 saveMindMap(selectedProduct, newNodes, newEdges);
 
 
+
+
+
+
               setNewNodeLabel("");
             }}
 
@@ -1270,6 +1281,7 @@ saveMindMap(selectedProduct, newNodes, newEdges);
             edges={edges}
             fitView
             nodesDraggable={true}
+            onNodesChange={onNodesChange}
             onNodeClick={(event, node) => {
               setSelectedNodeId(node.id);
             }}
